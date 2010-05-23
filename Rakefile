@@ -14,3 +14,15 @@ begin
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
 end
+
+desc 'rebuild the gem'
+task :rebuild => :build do
+  puts "Rebuilding the gem.."  
+  begin
+    system('gem uninstall dwe_loader')
+    version_file = File.open("VERSION", "rb")
+    system("gem install pkg/dwe_loader-#{version_file.read}.gem")
+  rescue
+    puts "something went wrong..."
+  end
+end

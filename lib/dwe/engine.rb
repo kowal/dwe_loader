@@ -9,7 +9,7 @@ module Dwe
       INDEX_INFO_KEYS = %w{levels: nodes: leaves: name: version:}
 
       def info
-        info = Dwe::Loader.instance.engine.index.index_props.to_s.split(' ')
+        info = engine.index.index_props.to_s.split(' ')
         res = {}
         INDEX_INFO_KEYS.map do |k|
           res[k.gsub(':', '')] = info[info.index(k)+1]
@@ -17,18 +17,27 @@ module Dwe
         res
       end
 
+      def init
+        loader_instance
+      end
+
       def telemetric_objects
-        Dwe::Loader.instance.engine.getDrawableTelemetric.to_a
+        engine.getDrawableTelemetric.to_a
       end
 
       def index_nodes
-        Dwe::Loader.instance.engine.index.nodes
+        engine.index.nodes
       end
 
       def engine
-        Dwe::Loader.instance.engine
+        loader_instance.engine
       end
 
+      private
+
+      def loader_instance
+        Dwe::Loader.instance
+      end
     end
     
   end
