@@ -6,20 +6,23 @@
 
 module Dwe
   class Config
-
-    DEFAULT_DWE_CLASSES = {
-      'dwe.core.misc' => %w{ Rect Point LocationComponent LocationDescriptor DWCalendar Identifier },
-      'dwe.management' => 'SimpleManager',
-      'dwe.config' => 'ConfigFactory' }
-
+    
     # Example usage
     #   Dwe::Config.setup("config.yml") { |conf| conf[RAILS_ENV] }
     #
-    def self.setup(conf_file, env)
+    def self.setup(conf_file, env, opts={})
       @@conf = YAML::load_file(conf_file)[env]
-      @@conf['external_jars'].each { |jar| require jar } if @@conf['external_jars']
-      
-      JavaClassLoader.include_java_classes(Dwe, DEFAULT_DWE_CLASSES)
+
+      if @@conf['external_jars']
+        @@conf['external_jars'].each do |jar|
+          require jar
+        end
+      end
+
+      # optioanlly load selcted DWE classes      
+      if opts[:classes]
+        JavaClassLoader.include_java_classes(Dwe, opts[:classes])
+      end
 
       # now we can load other stuff..
       require 'dwe/base_ruby_manager'
