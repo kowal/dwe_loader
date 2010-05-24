@@ -6,9 +6,15 @@
 
 module Dwe
   class Config
-    
+
+    DWE_CLASSES = {
+      'dwe.management' => 'SimpleManager',
+      'dwe.config'     => 'ConfigFactory' }
+
     # Example usage
     #   Dwe::Config.setup("config.yml") { |conf| conf[RAILS_ENV] }
+    #  @opts
+    #    :include_java =>  { Dwe => { 'dwe.config' => 'ConfigFactory' , ... } }
     #
     def self.setup(conf_file, env, opts={})
       @@conf = YAML::load_file(conf_file)[env]
@@ -18,10 +24,14 @@ module Dwe
           require jar
         end
       end
+      
+      JavaClassLoader.include_java_classes(Dwe, DWE_CLASSES)
 
       # optioanlly load selcted DWE classes      
-      if opts[:classes]
-        JavaClassLoader.include_java_classes(Dwe, opts[:classes])
+      if opts[:include_java]
+        opts[:include_java].each_pair do |base_class, classes_to_include|
+          JavaClassLoader.include_java_classes(base_class, classes_to_include)
+        end
       end
 
       # now we can load other stuff..
