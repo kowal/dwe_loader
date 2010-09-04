@@ -17,8 +17,7 @@ module Dwe
     #    :include_java =>  { Dwe => { 'dwe.config' => 'ConfigFactory' , ... } }
     #
     def self.setup(conf_file, env, opts={})
-      @@conf = YAML::load_file(conf_file)[env]
-      STDERR.puts "#{self.name}.setup ... #{pp @@conf rescue @@conf.inspect}"
+      @@conf = YAML::load_file(conf_file)[env]      
 
       # Load main DWE jars
       if conf['main_jars']
