@@ -16,8 +16,8 @@ module Dwe
     end
 
     def config_file     
-      @config_file ||= java.io.File.new(File.join(Dwe::Config[:config_file]))
+      @config_file ||= java.io.File.new(Dwe::Config.config_file_path)
     end
-
+    
   end
 end
