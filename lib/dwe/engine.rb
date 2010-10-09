@@ -29,6 +29,7 @@ module Dwe
         engine.index.nodes
       end
 
+      # returns [dwe.engine.DataWarehouseEngine] DW engine instance
       def engine
         loader_instance.engine
       end
